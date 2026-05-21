@@ -1,0 +1,89 @@
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { fetchUser } from '../config/auth';
+import { getUser, setUser as saveUser, removeUser } from '../utils/AuthProf';
+
+const AuthContext = createContext(null);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
+};
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loader, setLoader] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const hasLoaded = useRef(false);
+
+  const loadUser = async () => {
+    // Prevent multiple loads
+    if (hasLoaded.current) return;
+    hasLoaded.current = true;
+    
+    setLoader(true);
+    try {
+      // First check localStorage
+      const storedUser = getUser();
+      if (storedUser && storedUser.token) {
+        setUser(storedUser);
+        setIsAuthenticated(true);
+        setLoader(false);
+        return;
+      }
+      
+      // If no stored user, try backend
+      try {
+        const userFromBackend = await fetchUser();
+        if (userFromBackend) {
+          setUser(userFromBackend);
+          setIsAuthenticated(true);
+          saveUser(userFromBackend);
+        }
+      } catch (backendError) {
+        console.error('Backend verification failed:', backendError);
+      }
+    } catch (error) {
+      console.error('Error loading user:', error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  const login = (userData) => {
+    setUser(userData);
+    setIsAuthenticated(true);
+    saveUser(userData);
+    if (userData.token) {
+      localStorage.setItem('token', userData.token);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+    removeUser();
+    localStorage.removeItem('token');
+  };
+
+  const value = {
+    user,
+    loader,
+    isAuthenticated,
+    login,
+    logout,
+    loadUser
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
