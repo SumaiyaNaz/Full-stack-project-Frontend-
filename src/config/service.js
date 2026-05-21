@@ -2,15 +2,23 @@ import axios from "axios";
 
 // Get API URL based on environment
 const getApiUrl = () => {
+  // First check environment variable
+  if (import.meta.env.VITE_API_URL) {
+    console.log("Using VITE_API_URL:", import.meta.env.VITE_API_URL);
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // Then check if we're in production
   if (import.meta.env.PROD) {
-    // Production - Vercel backend URL
     return 'https://full-stack-project-backend-lovat.vercel.app/api/v1';
   }
-  // Development
+  
+  // Development fallback
   return 'http://localhost:3000/api/v1';
 };
 
 const url = getApiUrl();
+console.log("API Base URL:", url);
 
 const api = axios.create({
   baseURL: url,
@@ -18,7 +26,7 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
   withCredentials: true,
-  timeout: 30000,
+  timeout: 60000,
 });
 
 // Add token to requests
@@ -28,6 +36,9 @@ api.interceptors.request.use(
       const token = localStorage.getItem('token');
       if (token && token !== 'undefined' && token !== 'null') {
         config.headers.Authorization = `Bearer ${token}`;
+        console.log("Token added to request:", config.url);
+      } else {
+        console.log("No token found for:", config.url);
       }
     } catch (error) {
       console.error('Error adding token:', error);
@@ -42,9 +53,16 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
+    console.log("Response from:", response.config.url, response.status);
     return response;
   },
   (error) => {
+    console.error("API Error Details:", {
+      url: error.config?.url,
+      status: error.response?.status,
+      message: error.message
+    });
+    
     if (error.response?.status === 401) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
