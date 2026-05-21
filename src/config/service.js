@@ -4,7 +4,7 @@ import axios from "axios";
 const getApiUrl = () => {
   if (import.meta.env.PROD) {
     // Production - Vercel backend URL
-    return import.meta.env.VITE_API_URL || 'https://full-stack-project-backend-lovat.vercel.app';
+    return 'https://full-stack-project-backend-lovat.vercel.app/api/v1';
   }
   // Development
   return 'http://localhost:3000/api/v1';
