@@ -9,7 +9,7 @@ export const setUser = (data) => {
 export const getUser = () => {
     try {
         const userStr = localStorage.getItem('user');
-        if (userStr) {
+        if (userStr && userStr !== 'undefined' && userStr !== 'null') {
             const user = JSON.parse(userStr);
             // Also get token if exists separately
             const token = localStorage.getItem('token');
@@ -21,6 +21,7 @@ export const getUser = () => {
         return null;
     } catch (error) {
         console.error('Error getting user:', error);
+        localStorage.removeItem('user');
         return null;
     }
 };

@@ -14,7 +14,7 @@ const getApiUrl = () => {
   }
   
   // Development fallback
-  return 'http://localhost:3000/api/v1';
+  return 'http://localhost:9000/api/v1';
 };
 
 const url = getApiUrl();
