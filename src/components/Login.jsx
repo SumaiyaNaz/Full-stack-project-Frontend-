@@ -30,7 +30,7 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await api.post('/auth/login', formData);
+      const response = await api.post('/api/v1/auth/login', formData);
       console.log('Login response:', response.data);
       
       if (response.data.status && response.data.token) {
