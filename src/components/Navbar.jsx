@@ -25,7 +25,7 @@ const NavigationBar = () => {
 
   const handleLogout = async () => {
     try {
-      await api.get('/auth/logout');
+      await api.get('api/v1/auth/logout');
       logout();
       navigate('/login');
     } catch (error) {

@@ -14,10 +14,10 @@ const getApiUrl = () => {
   }
   
   // Development fallback
-  return 'http://localhost:3000/api/v1';
+  return 'http://localhost:3000';
 };
 
-const url = getApiUrl();
+const url = import.meta.env.VITE_API_URL
 console.log("API Base URL:", url);
 
 const api = axios.create({
