@@ -1,21 +1,21 @@
 import axios from "axios";
 
-// Get API URL based on environment
-const getApiUrl = () => {
-  // First check environment variable
-  if (import.meta.env.VITE_API_URL) {
-    console.log("Using VITE_API_URL:", import.meta.env.VITE_API_URL);
-    return import.meta.env.VITE_API_URL;
-  }
+// // Get API URL based on environment
+// const getApiUrl = () => {
+//   // First check environment variable
+//   if (import.meta.env.VITE_API_URL) {
+//     console.log("Using VITE_API_URL:", import.meta.env.VITE_API_URL);
+//     return import.meta.env.VITE_API_URL;
+//   }
   
-  // Then check if we're in production
-  if (import.meta.env.PROD) {
-    return 'https://full-stack-project-backend-lovat.vercel.app/api/v1';
-  }
+//   // Then check if we're in production
+//   if (import.meta.env.PROD) {
+//     return 'https://full-stack-project-backend-lovat.vercel.app/api/v1';
+//   }
   
-  // Development fallback
-  return 'http://localhost:3000';
-};
+//   // Development fallback
+//   return 'http://localhost:3000';
+// };
 
 const url = import.meta.env.VITE_API_URL
 console.log("API Base URL:", url);
