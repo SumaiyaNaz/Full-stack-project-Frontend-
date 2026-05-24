@@ -19,7 +19,7 @@ const AdminDashboard = () => {
       setLoading(true);
       setError('');
       console.log('Fetching users...');
-      const response = await api.get('/auth/getuser');
+      const response = await api.get('/api/v1/auth/getuser');
       console.log('Users response:', response.data);
       
       if (response.data.status) {
@@ -38,7 +38,7 @@ const AdminDashboard = () => {
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        const response = await api.delete(`/auth/user/${userId}`);
+        const response = await api.delete(`/api/v1/auth/user/${userId}`);
         if (response.data.status) {
           setUsers(users.filter(u => u._id !== userId));
           alert('User deleted successfully');
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
   const handleRoleChange = async (userId, newRole) => {
     setUpdating(userId);
     try {
-      const response = await api.put(`/auth/user/${userId}`, { role: newRole });
+      const response = await api.put(`/api/v1/auth/user/${userId}`, { role: newRole });
       if (response.data.status) {
         setUsers(users.map(u => 
           u._id === userId ? { ...u, role: newRole } : u
