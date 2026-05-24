@@ -28,7 +28,7 @@ const Profile = () => {
     setMessage('');
 
     try {
-      const response = await api.put(`/auth/user/${user._id}`, formData);
+      const response = await api.put(`/api/v1/auth/user/${user._id}`, formData);
       if (response.data.status) {
         const updatedUser = { ...user, name: formData.name, email: formData.email };
         if (user.token) updatedUser.token = user.token;
